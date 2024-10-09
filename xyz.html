@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      /* background-color: #f4f4f4; */
+      background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+    }
+
+    /* Sidebar styling */
+    .sidebar {
+      width: 200px;
+      background: linear-gradient(to right, #5c6bc0, #512da8); 
+      height: 100vh;
+      padding: 20px;
+      position: fixed;
+      color: white;
+    }
+
+    .logo {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    width: 100%; /* Full width for proper centering */
+}
+
+.logo img {
+    width: 100px; /* Set the width of the logo */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 5px; /* Space below the logo */
+    border-radius: 20px; /* Rounded corners */
+}
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 22px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    .sidebar ul li {
+      padding: 10px 0;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .sidebar ul li i {
+      margin-right: 10px;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: white;
+      display: block;
+      transition: background-color 0.3s;
+    }
+    
+    .sidebar ul li:hover, .sidebar ul li a.active {
+      background: linear-gradient(to right, #697ad9, #3c217b);
+      border-radius: 7px;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      padding: 20px;
+      width: calc(100% - 260px);
+    }
+
+    /* Smooth Scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+    }
+
+    .summary-cards {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .summary-card {
+      /* background-color: #A569BD; */
+      background: linear-gradient(to right, #5c6bc0, #512da8); 
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      width: 30%;
+      text-align: center;
+    }
+
+    /* Graphs */
+    .charts {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .chart-box {
+      width: 48%;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    /* Performance section */
+    .performance {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    /* Employees & Project Overview */
+    .employees-projects {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .project-overview, .employees {
+      width: 48%;
+      background-color: white;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    /* Pie Chart */
+    .pie-chart {
+      width: 100px;
+      height: 100px;
+      background-color: #fff;
+      border-radius: 50%;
+    }
+
+    /* Attendance */
+    .attendance {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    /* Events */
+    .events {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    /* pichat */
+    .chart-container {
+      position: relative;
+      margin: auto;
+      height: 40vh;
+      width: 80vw;
+    }
+
+/* calender */
+        label {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        select, button {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus, button:focus {
+            border-color: #4A90E2;
+            outline: none;
+        }
+
+        button {
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #357ABD;
+        }
+
+        #calendarContainer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #calendarTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        #calendarTable th {
+            background-color: #4A90E2;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #calendarGrid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7 columns for days of the week */
+            gap: 10px; /* Space between boxes */
+            padding: 10px;
+        }
+
+        .dateBox {
+            border: 1.3px solid #0c0b0b;
+            text-align: center;
+            padding: 1px;
+            background-color: #ffffff;
+            border-radius: 50px;
+            transition: background-color 0.3s ease;
+            width: 50px; /* Width for each date box */
+            height: 50px; /* Height for each date box */
+            display: flex; /* Centering the content */
+            justify-content: center;
+            align-items: center;
+            cursor: pointer; /* Pointer on hover */
+        }
+
+        .dateBox.present {
+            background-color: green; /* Present */
+            color: white; /* Text color for present */
+        }
+
+        .dateBox.absent {
+            background-color: red; /* Absent */
+            color: white; /* Text color for absent */
+        }
+
+        @media (max-width: 600px) {
+            label, select, button {
+                font-size: 0.9em;
+                margin-bottom: 10px;
+                display: block;
+            }
+            button {
+                margin-top: 10px;
+            }
+            #calendarTable {
+                font-size: 0.8em; /* Adjust table font size for smaller screens */
+            }
+        }
+
+        .performance {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .performance th, .performance td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .performance th {
+            background-color: #f2f2f2;
+        }
+
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo"><img src="logo.png" alt=""></div>
+    <ul>
+      <h3>Employee Dashboard</h3>
+      <li><a href="#dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li><a href="#tasks"><i class="fas fa-tasks"></i> Task</a></li>
+      <li><a href="#reports"><i class="fas fa-chart-line"></i> Report</a></li>
+      <li><a href="#calendar"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+      <li><a href="#messages"><i class="fas fa-envelope"></i> Messages</a></li>
+      <li><a href="#settings"><i class="fas fa-cogs"></i> Settings</a></li>
+      <li><a href="#support"><i class="fas fa-question-circle"></i> Support</a></li>
+      <li><a href="new.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Header -->
+    <div class="header">
+      <h1 id="dashboard">Hello Taruk! Welcome back, Have a good day.</h1>
+      <div class="user-profile">
+        <img src="user.jpg" alt="User" width="40">
+      </div>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <h2>Total Employees</h2>
+        <p>400</p>
+      </div>
+      <div class="summary-card">
+        <h2>New Joined Employees</h2>
+        <p>150</p>
+      </div>
+      <div class="summary-card">
+        <h2>Resigned Employees</h2>
+        <p>30</p>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div id="tasks" class="charts">
+      <div class="chart-box">
+        <h3>Job Applications</h3>
+        <canvas id="jobChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Project Overview</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width:60%">Signed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance section -->
+    <div id="reports" class="performance">
+      <h3>Performance Listed</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Employee Name</th>
+            <th>Department</th>
+            <th>Salary</th>
+            <th>Project</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Peter</td>
+            <td>Marketing</td>
+            <td>15,000</td>
+            <td>39</td>
+          </tr>
+          <tr>
+            <td>Jhon</td>
+            <td>Design</td>
+            <td>150,000</td>
+            <td>28</td>
+          </tr>
+          <tr>
+            <td>Ayush</td>
+            <td>Event</td>
+            <td>30,000</td>
+            <td>14</td>
+          </tr>
+          <tr>
+            <td>Divyansh</td>
+            <td>PR-Outreach</td>
+            <td>250,000</td>
+            <td>38</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Employees and Project Overview -->
+    <div class="employees-projects">
+
+
+      <div class="employees">
+        <h3>Employees</h3>
+      </div>
+
+      <div class="project-overview">
+        <h3>Project Overview</h3>
+        <div class="card p-4 mt-4">
+          <h4>Task Distribution</h4>
+          <div class="chart-container">
+            <canvas id="taskPieChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    
+    <!-- Attendance Section -->
+    <div id="attendance" class="attendance">
+      <h1>Mark your Attendance</h1>
+    <div>
+        <label for="monthSelect">Select Month:</label>
+        <select id="monthSelect">
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+        </select>
+        <button id="generateCalendar">Generate Calendar</button>
+    </div>
+
+    <div id="calendarContainer">
+        <table id="calendarTable">
+            <tbody id="calendarBody">
+                <tr>
+                    <td colspan="7" id="calendarGrid">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+  </div>
+      
+
+    <!-- Events -->
+    <div id="messages" class="events">
+      <h3>Today's Events</h3>
+      <p>Anna's Birthday</p>
+    </div>
+
+    <div id="settings" class="events">
+      <h3>Settings</h3>
+      <p>Manage Account Settings</p>
+    </div>
+
+    <div id="support" class="events">
+      <h3>Support</h3>
+      <p>Contact Support</p>
+    </div>
+<!-- 
+    <div id="logout" class="events">
+      <h3>Logout</h3>
+      <p>Logging out...</p>
+    </div>
+  </div> -->
+
+  <!-- Scripts (for charts and progress bars) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // For Job Applications Chart (example using Chart.js)
+    var ctx = document.getElementById('jobChart').getContext('2d');
+    var jobChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        datasets: [{
+          label: 'Applications',
+          data: [20, 30, 50, 80, 56, 40, 70],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // Add active class to the current link (highlight it)
+    const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
+    sidebarLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        sidebarLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+
+
+    const pieCtx = document.getElementById('taskPieChart').getContext('2d');
+    const taskPieChart = new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Completed', 'Pending', 'In Progress'],
+        datasets: [{
+          label: 'Task Distribution',
+          data: [15, 5, 10], // Example data
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.5)',
+            'rgba(255, 206, 86, 0.5)',
+            'rgba(153, 102, 255, 0.5)'
+          ],
+          borderColor: [
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(153, 102, 255, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Task Distribution'
+          }
+        }
+      }
+    });
+
+
+    document.getElementById('generateCalendar').addEventListener('click', function() {
+            const monthSelect = document.getElementById('monthSelect');
+            const selectedMonth = parseInt(monthSelect.value);
+            const year = new Date().getFullYear(); // Current year
+            const daysInMonth = new Date(year, selectedMonth + 1, 0).getDate(); // Get number of days in selected month
+
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = ''; // Clear existing dates
+
+            // Populate the calendar with dates
+            for (let day = 1; day <= daysInMonth; day++) {
+                const box = `<div class="dateBox" data-state="normal">${day}</div>`;
+                calendarGrid.insertAdjacentHTML('beforeend', box);
+            }
+
+            // Add click event to each date box
+            const dateBoxes = document.querySelectorAll('.dateBox');
+            dateBoxes.forEach(box => {
+                box.addEventListener('click', function() {
+                    const currentState = this.getAttribute('data-state');
+
+                    if (currentState === 'normal') {
+                        this.classList.add('present');
+                        this.setAttribute('data-state', 'present');
+                    } else if (currentState === 'present') {
+                        this.classList.remove('present');
+                        this.classList.add('absent');
+                        this.setAttribute('data-state', 'absent');
+                    } else if (currentState === 'absent') {
+                        this.classList.remove('absent');
+                        this.setAttribute('data-state', 'normal');
+                        this.style.backgroundColor = '#ffffff'; // Reset to white
+                    }
+                });
+            });
+        });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
