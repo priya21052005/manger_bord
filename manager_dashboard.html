@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Dashboard</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+  /* Added some new styles to make it more interactive and professional */
+
+body {
+  background-color: #f8f9fa;
+  overflow-x: hidden;
+  font-family: 'Open Sans', sans-serif; /* Added a modern font family */
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px; /* Added some padding to the cards */
+}
+
+.container {
+  margin-top: 20px;
+}
+
+.form-label {
+  margin-top: 10px;
+}
+
+.task-list {
+  margin-top: 20px;
+}
+
+.list-group-item {
+  cursor: pointer;
+  transition: background-color 0.3s; /* Added a transition effect */
+}
+
+.list-group-item:hover {
+  background-color: #f1f1f1;
+}
+
+.member-percentage {
+  float: right;
+  font-weight: bold;
+  color: #0f0f10; /* Changed the color to a more professional blue */
+}
+
+.sidebar {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: -250px;
+  background-color: #2c70b5da;
+  padding-top: 60px;
+  transition: 0.5s;
+  overflow-x: hidden;
+  z-index: 1000;
+  box-shadow: 0px 0px 10px rgba(206, 70, 70, 0.2); /* Added a box shadow to the sidebar */
+}
+
+.sidebar a {
+  padding: 10px 15px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #f1f1f1;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  background-color: #404242;
+  color: #fff; /* Changed the hover color to white */
+}
+
+.sidebar a i {
+  margin-right: 10px; /* Added margin to the icons */
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #343a40;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1001;
+}
+
+.closebtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 30px;
+  cursor: pointer;
+  color: white;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.main-content {
+  margin-left: 0;
+  transition: margin-left 0.5s;
+}
+
+.main-content.active {
+  margin-left: 250px;
+}
+
+/* Hide sections by default */
+#addMemberSection, #removeMemberSection {
+  display: none;
+}
+
+/* Added some new styles for the tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f0f0f0;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Added some new styles for the buttons */
+.btn {
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.btn-primary {
+  background-color: #337ab7;
+  color: #fff;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+/* Added some new styles for the icons */
+i {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+/* Added some new styles for the dashboard */
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.dashboard .card {
+  margin: 20px;
+  width: calc(33.33% - 20px);
+}
+
+.dashboard .card .card-body {
+  padding: 20px;
+}
+
+.dashboard .card .card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.dashboard .card .card-text {
+  font-size: 14px;
+  color: #666;
+}
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar()">&times;</a>
+    <a href="#">Dashboard</a>
+    <a href="#">Teams Overview</a>
+    <a href="#">Assign Tasks</a>
+    <a href="javascript:void(0)" onclick="showAddMember()">Add Member</a>
+    <a href="javascript:void(0)" onclick="showRemoveMember()">Remove Member</a>
+    <a href="index.html">Log Out</a>
+  </div>
+
+  <!-- Button to open sidebar -->
+  <button class="openbtn" onclick="toggleSidebar()">☰</button>
+
+  <!-- Main content -->
+  <div id="main" class="main-content">
+    <div class="container">
+      <h2>Manager Dashboard</h2>
+      <h3>Teams Overview</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Team Leader</th>
+            <th>Team Name</th>
+            <th>Members</th>
+            <th>Status</th>
+            <th>Completion %</th>
+          </tr>
+        </thead>
+        <tbody id="teamTable">
+          <tr onclick="viewTeam(1)">
+            <td>Gunpreet</td>
+            <td>Team Alpha</td>
+            <td id="team1Members">4</td>
+            <td>Pending</td>
+            <td id="completion-1">0%</td>
+          </tr>
+          <tr onclick="viewTeam(2)">
+            <td>Gagan</td>
+            <td>Team Beta</td>
+            <td id="team2Members">4</td>
+            <td>Confirmed</td>
+            <td id="completion-2">0%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div id="membersList" class="mt-4"></div>
+      <div id="taskAssignmentSection" class="card p-4 mt-4" style="display: none;">
+        <h4>Assign a Task to <span id="selectedMemberName"></span></h4>
+        <form id="taskAssignmentForm">
+          <div class="mb-3">
+            <label for="taskName" class="form-label">Task Name</label>
+            <input type="text" class="form-control" id="taskName" placeholder="Enter Task Name" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Assign Task</button>
+        </form>
+        <div id="assignedTasks" class="mt-4"></div>
+      </div>
+
+      <!-- Add New Member Section -->
+      <div id="addMemberSection" class="card p-4 mt-4">
+        <h4>Add New Member to Team</h4>
+        <form id="addMemberForm">
+          <div class="mb-3">
+            <label for="memberName" class="form-label">Member Name</label>
+            <input type="text" class="form-control" id="memberName" placeholder="Enter Member Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="memberUserId" class="form-label">User ID</label>
+            <input type="text" class="form-control" id="memberUserId" placeholder="Enter User ID" required>
+          </div>
+          <div class="mb-3">
+            <label for="teamSelect" class="form-label">Select Team</label>
+            <select id="teamSelect" class="form-select" required>
+              <option value="1">Team Alpha</option>
+              <option value="2">Team Beta</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Member</button>
+        </form>
+      </div>
+
+      <!-- Remove Member Section -->
+      <div id="removeMemberSection" class="card p-4 mt-4">
+        <h4>Remove Member from Team</h4>
+        <form id="removeMemberForm">
+          <div class="mb-3">
+            <label for="removeMemberName" class="form-label">Member Name</label>
+            <input type="text" class="form-control" id="removeMemberName" placeholder="Enter Member Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="removeTeamSelect" class="form-label">Select Team</label>
+            <select id="removeTeamSelect" class="form-select" required>
+              <option value="1">Team Alpha</option>
+              <option value="2">Team Beta</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-danger">Remove Member</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle sidebar visibility
+    function toggleSidebar() {
+      const sidebar = document.getElementById("mySidebar");
+      const mainContent = document.getElementById("main");
+      sidebar.classList.toggle("active");
+      mainContent.classList.toggle("active");
+    }
+
+    // Show "Add Member" section and hide others
+    function showAddMember() {
+      document.getElementById("addMemberSection").style.display = 'block';
+      document.getElementById("removeMemberSection").style.display = 'none';
+    }
+
+    // Show "Remove Member" section and hide others
+    function showRemoveMember() {
+      document.getElementById("removeMemberSection").style.display = 'block';
+      document.getElementById("addMemberSection").style.display = 'none';
+    }
+
+    // Function to add a new member
+    document.getElementById('addMemberForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const memberName = document.getElementById('memberName').value;
+      const memberUserId = document.getElementById('memberUserId').value;
+      const teamId = document.getElementById('teamSelect').value;
+
+      // Add member to team members array
+      teamMembers[teamId].push(memberName);
+      saveTeamMembers(); // Save updated members to local storage
+      document.getElementById('memberName').value = ''; // Clear the form
+      alert(`Member ${memberName} added to the team!`);
+    });
+
+    // Function to remove a member
+    document.getElementById('removeMemberForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const removeMemberName = document.getElementById('removeMemberName').value;
+      const teamId = document.getElementById('removeTeamSelect').value;
+
+      // Remove member from the team members array
+      const index = teamMembers[teamId].indexOf(removeMemberName);
+      if (index !== -1) {
+        teamMembers[teamId].splice(index, 1);
+        saveTeamMembers(); // Save updated members to local storage
+        document.getElementById('removeMemberName').value = ''; // Clear the form
+        alert(`Member ${removeMemberName} removed from the team!`);
+      } else {
+        alert(`Member ${removeMemberName} not found in the selected team.`);
+      }
+    });
+
+    // Load team members data from local storage
+    let teamMembers = JSON.parse(localStorage.getItem('teamMembers')) || {
+      1: ['Ayush', 'Priya', 'Divyansh', 'Gunita'],
+      2: ['Bilakshan', 'Bhavesh', 'Bhumika', 'Chirayu']
+    };
+
+    // Function to save team members to local storage
+    function saveTeamMembers() {
+      localStorage.setItem('teamMembers', JSON.stringify(teamMembers));
+    }
+
+    // View team details and tasks
+    function viewTeam(teamId) {
+      const selectedMemberName = document.getElementById('selectedMemberName');
+      const taskAssignmentSection = document.getElementById('taskAssignmentSection');
+
+      // Show team members
+      const membersList = document.getElementById('membersList');
+      membersList.innerHTML = `<h4>Team Members</h4><ul class="list-group">${teamMembers[teamId].map(member => `<li class="list-group-item" onclick="updateManagerView('${member}')">${member} <span id="percentage-${member}" class="member-percentage">0%</span></li>`).join('')}</ul>`;
+
+      // Show task assignment section
+      taskAssignmentSection.style.display = 'block';
+      updateCompletionPercentage(teamId);
+    }
+
+    function updateManagerView(memberName) {
+      const selectedMemberName = document.getElementById('selectedMemberName');
+      selectedMemberName.textContent = memberName;
+
+      const tasksData = JSON.parse(localStorage.getItem('tasksData')) || {};
+      const memberTasks = tasksData[memberName] || [];
+
+      const assignedTasks = document.getElementById('assignedTasks');
+      assignedTasks.innerHTML = '<h5>Assigned Tasks</h5><ul class="list-group">' + memberTasks.map((task, index) => `
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          ${task.taskName}
+          <div>
+            <button class="btn btn-danger btn-sm" onclick="removeTask('${memberName}', ${index})">Remove</button>
+            <span class="badge ${task.completed ? 'bg-success' : 'bg-secondary'}">
+              ${task.completed ? 'Completed' : 'Pending'}
+            </span>
+          </div>
+        </li>`).join('') + '</ul>';
+
+      updateMemberCompletionPercentage(memberName); // Update individual member's completion percentage
+    }
+
+    document.getElementById('taskAssignmentForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const memberName = document.getElementById('selectedMemberName').textContent;
+      const taskName = document.getElementById('taskName').value;
+
+      if (memberName && taskName) {
+        const tasksData = JSON.parse(localStorage.getItem('tasksData')) || {};
+        if (!(memberName in tasksData)) {
+          tasksData[memberName] = [];
+        }
+
+        tasksData[memberName].push({ taskName: taskName, completed: false });
+        localStorage.setItem('tasksData', JSON.stringify(tasksData));
+        document.getElementById('taskName').value = ''; // Clear input
+        updateManagerView(memberName); // Refresh tasks for that member
+      } else {
+        alert('Please select a member and enter a task name.');
+      }
+    });
+
+    // Function to update team completion percentage
+    function updateCompletionPercentage(teamId) {
+      const completionPercentages = [];
+      const tasksData = JSON.parse(localStorage.getItem('tasksData')) || {};
+
+      teamMembers[teamId].forEach(member => {
+        const memberTasks = tasksData[member] || [];
+        const totalTasks = memberTasks.length;
+        const completedTasks = memberTasks.filter(task => task.completed).length;
+        const memberCompletionPercentage = totalTasks > 0 
+          ? Math.round((completedTasks / totalTasks) * 100) 
+          : 0;
+
+        completionPercentages.push(memberCompletionPercentage);
+        document.getElementById(`percentage-${member}`).textContent = `${memberCompletionPercentage}%`;
+      });
+
+      // Calculate team completion percentage
+      const totalTasks = completionPercentages.length;
+      const totalCompleted = completionPercentages.reduce((acc, curr) => acc + curr, 0);
+      const teamCompletionPercentage = totalTasks > 0 
+        ? Math.round(totalCompleted / totalTasks) 
+        : 0;
+
+      document.getElementById(`completion-${teamId}`).textContent = `${teamCompletionPercentage}%`;
+    }
+
+    // Function to remove a task from the selected member's task list
+    function removeTask(memberName, taskIndex) {
+      const tasksData = JSON.parse(localStorage.getItem('tasksData')) || {};
+      if (memberName in tasksData) {
+        // Remove the task at the specified index
+        tasksData[memberName].splice(taskIndex, 1);
+        localStorage.setItem('tasksData', JSON.stringify(tasksData));
+        updateManagerView(memberName); // Refresh the task list for the member
+      }
+    }
+
+    // Function to add a new member to the selected team
+    document.getElementById('addMemberForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const memberName = document.getElementById('memberName').value;
+      const memberUserId = document.getElementById('memberUserId').value;
+      const teamId = document.getElementById('teamSelect').value;
+
+      // Add member to team members array
+      teamMembers[teamId].push(memberName);
+      saveTeamMembers(); // Save updated members to local storage
+      document.getElementById('memberName').value = ''; // Clear input
+      document.getElementById('memberUserId').value = ''; // Clear input
+
+      // Update the member count
+      const teamMembersCount = document.getElementById(`team${teamId}Members`);
+      teamMembersCount.textContent = teamMembers[teamId].length;
+
+      alert(`Member ${memberName} added to Team ${teamId === '1' ? 'Alpha' : 'Beta'}.`);
+    });
+
+    // Function to remove a member from the selected team
+    document.getElementById('removeMemberForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const memberName = document.getElementById('removeMemberName').value;
+      const teamId = document.getElementById('removeTeamSelect').value;
+
+      // Remove member from team members array
+      const memberIndex = teamMembers[teamId].indexOf(memberName);
+      if (memberIndex > -1) {
+        teamMembers[teamId].splice(memberIndex, 1);
+        saveTeamMembers(); // Save updated members to local storage
+        document.getElementById('removeMemberName').value = ''; // Clear input
+
+        // Update the member count
+        const teamMembersCount = document.getElementById(`team${teamId}Members`);
+        teamMembersCount.textContent = teamMembers[teamId].length;
+
+        alert(`Member ${memberName} removed from Team ${teamId === '1' ? 'Alpha' : 'Beta'}.`);
+      } else {
+        alert(`Member ${memberName} not found in Team ${teamId === '1' ? 'Alpha' : 'Beta'}.`);
+      }
+    });
+
+    // Initialize member counts
+    const team1Count = document.getElementById('team1Members');
+    const team2Count = document.getElementById('team2Members');
+    team1Count.textContent = teamMembers[1].length;
+    team2Count.textContent = teamMembers[2].length;
+
+
+    function updateManagerView(memberName) {
+  const selectedMemberName = document.getElementById('selectedMemberName');
+  selectedMemberName.textContent = memberName;
+
+  const tasksData = JSON.parse(localStorage.getItem('tasksData')) || {};
+  const memberTasks = tasksData[memberName] || [];
+
+  const assignedTasks = document.getElementById('assignedTasks');
+  assignedTasks.innerHTML = '<h5>Assigned Tasks</h5><ul class="list-group">' + memberTasks.map((task, index) => `
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      ${task.taskName}
+      <div>
+        <button class="btn btn-success btn-sm" onclick="markAsDone('${memberName}', ${index})" ${task.completed ? 'disabled' : ''}>
+          ${task.completed ? 'Done' : 'Mark as Done'}
+        </button>
+        <button class="btn btn-danger btn-sm ms-2" onclick="removeTask('${memberName}', ${index})">Remove</button>
+        <span class="badge ${task.completed ? 'bg-success' : 'bg-secondary'}">
+          ${task.completed ? 'Completed' : 'Pending'}
+        </span>
+      </div>
+    </li>`).join('') + '</ul>';
+
+  updateMemberCompletionPercentage(memberName); // Update individual member's completion percentage
+}
+
+
+function markAsDone(memberName, taskIndex) {
+  const tasksData = JSON.parse(localStorage.getItem('tasksData')) || {};
+  if (memberName in tasksData) {
+    tasksData[memberName][taskIndex].completed = true; // Mark the task as done
+    localStorage.setItem('tasksData', JSON.stringify(tasksData));
+    updateManagerView(memberName); // Refresh the task list for the member
+  }
+}
+
+  </script>
+
+</body>
+</html>
