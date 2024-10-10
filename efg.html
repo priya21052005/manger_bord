@@ -140,6 +140,104 @@
     }
 
   </style>
+  <style>
+    .employee-dashboard {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.view-all {
+  color: #5a67d8;
+  text-decoration: none;
+}
+
+.tabs {
+  display: flex;
+  margin: 20px 0;
+}
+
+.tab {
+  background-color: #f4f4f9;
+  border: none;
+  padding: 10px 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #333;
+  font-size: 14px;
+}
+
+.tab.active {
+  background-color: #5a67d8;
+  color: white;
+}
+
+.count {
+  background-color: #e2e8f0;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f4f4f9;
+  color: black;
+}
+
+td {
+  font-size: 14px;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.status.unpaid {
+  background-color: #ffefef;
+  color: #ff6b6b;
+}
+
+.status.pending {
+  background-color: #fff5db;
+  color: #ffb300;
+}
+
+.status.paid {
+  background-color: #eafff5;
+  color: #00d084;
+}
+
+  </style>
 </head>
 <body>
 
@@ -248,8 +346,34 @@
 
     <!-- Notifications Section -->
     <div id="notifications" class="card">
-      <h3>Notifications</h3>
-      <p>No new notifications at the moment.</p>
+      <div class="employee-dashboard">
+        <header>
+          <h2>Employees</h2>
+          <a href="#" class="view-all">View All</a>
+        </header>
+    
+        <div class="tabs">
+          <button class="tab active" onclick="showTab('designer')">Designer <span class="count">11</span></button>
+          <button class="tab" onclick="showTab('developer')">Developer <span class="count">12</span></button>
+          <button class="tab" onclick="showTab('services')">Services <span class="count">3</span></button>
+          <button class="tab" onclick="showTab('manager')">Manager <span class="count">1</span></button>
+        </div>
+    
+        <div id="employeeTable">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Salary</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <!-- Dynamic content will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -303,6 +427,64 @@
         }
       }
     });
+  </script>
+  <script>
+    const employees = {
+  designer: [
+    { name: 'Axelia Nurwani', salary: '$2,500.00', status: 'unpaid' },
+    { name: 'Beck Johndor', salary: '$3,200.00', status: 'pending' },
+    { name: 'Cerys Lindsay', salary: '$1,900.00', status: 'unpaid' },
+    { name: 'Darren Parrish', salary: '$4,200.00', status: 'paid' },
+    { name: 'Enzo Welch', salary: '$4,500.00', status: 'unpaid' },
+    { name: 'Lexi Proctor', salary: '$3,250.00', status: 'paid' },
+    { name: 'Saoirse Vance', salary: '$1,950.00', status: 'pending' },
+    { name: 'Valerie Aguirre', salary: '$2,100.00', status: 'unpaid' }
+  ],
+  developer: [
+    { name: 'John Doe', salary: '$5,000.00', status: 'paid' },
+    { name: 'Jane Smith', salary: '$6,200.00', status: 'unpaid' },
+    { name: 'Carlos Davis', salary: '$4,800.00', status: 'pending' }
+  ],
+  services: [
+    { name: 'Olivia Morgan', salary: '$3,000.00', status: 'paid' },
+    { name: 'Emma Johnson', salary: '$2,700.00', status: 'pending' }
+  ],
+  manager: [
+    { name: 'David Willson', salary: '$7,500.00', status: 'paid' }
+  ]
+};
+
+// Function to display employees in the table
+function showTab(category) {
+  const tableBody = document.getElementById('tableBody');
+  tableBody.innerHTML = '';
+
+  employees[category].forEach(employee => {
+    const row = document.createElement('tr');
+    
+    const nameCell = document.createElement('td');
+    nameCell.textContent = employee.name;
+
+    const salaryCell = document.createElement('td');
+    salaryCell.textContent = employee.salary;
+
+    const statusCell = document.createElement('td');
+    statusCell.innerHTML = `<span class="status ${employee.status}">${employee.status.toUpperCase()}</span>`;
+
+    row.appendChild(nameCell);
+    row.appendChild(salaryCell);
+    row.appendChild(statusCell);
+    
+    tableBody.appendChild(row);
+  });
+
+  // Update active tab
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelector(`.tab[onclick="showTab('${category}')"]`).classList.add('active');
+}
+
+// Initialize with the 'designer' tab
+window.onload = () => showTab('designer');
   </script>
 
 </body>
