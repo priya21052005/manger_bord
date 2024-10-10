@@ -242,8 +242,8 @@
 
         #calendarGrid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr); /* 7 columns for days of the week */
-            gap: 10px; /* Space between boxes */
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 10px;
             padding: 10px;
         }
 
@@ -254,22 +254,22 @@
             background-color: #ffffff;
             border-radius: 50px;
             transition: background-color 0.3s ease;
-            width: 50px; /* Width for each date box */
-            height: 50px; /* Height for each date box */
-            display: flex; /* Centering the content */
+            width: 50px;
+            height: 50px;
+            display: flex; 
             justify-content: center;
             align-items: center;
-            cursor: pointer; /* Pointer on hover */
+            cursor: pointer; 
         }
 
         .dateBox.present {
-            background-color: green; /* Present */
-            color: white; /* Text color for present */
+            background-color: green; 
+            color: white; 
         }
 
         .dateBox.absent {
-            background-color: red; /* Absent */
-            color: white; /* Text color for absent */
+            background-color: red;
+            color: white; 
         }
 
         @media (max-width: 600px) {
@@ -282,7 +282,7 @@
                 margin-top: 10px;
             }
             #calendarTable {
-                font-size: 0.8em; /* Adjust table font size for smaller screens */
+                font-size: 0.8em; 
             }
         }
 
@@ -311,7 +311,7 @@
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
+
   <div class="sidebar">
     <div class="logo"><img src="logo.png" alt=""></div>
     <ul>
@@ -327,9 +327,9 @@
     </ul>
   </div>
 
-  <!-- Main content -->
+
   <div class="main-content">
-    <!-- Header -->
+
     <div class="header">
       <h1 id="dashboard">Hello Taruk! Welcome back, Have a good day.</h1>
       <div class="user-profile">
@@ -337,7 +337,7 @@
       </div>
     </div>
 
-    <!-- Summary cards -->
+
     <div class="summary-cards">
       <div class="summary-card">
         <h2>Total Employees</h2>
@@ -353,7 +353,7 @@
       </div>
     </div>
 
-    <!-- Charts -->
+
     <div id="tasks" class="charts">
       <div class="chart-box">
         <h3>Job Applications</h3>
@@ -362,12 +362,15 @@
       <div class="chart-box">
         <h3>Project Overview</h3>
         <div class="progress">
-          <div class="progress-bar" style="width:60%">Signed</div>
+          <div class="content">
+            <section class="report-section">
+              <canvas id="lineChart"></canvas>
+            </section></div>
         </div>
       </div>
     </div>
 
-    <!-- Performance section -->
+ 
     <div id="reports" class="performance">
       <h3>Performance Listed</h3>
       <table>
@@ -407,8 +410,6 @@
         </tbody>
       </table>
     </div>
-
-    <!-- Employees and Project Overview -->
     <div class="employees-projects">
 
 
@@ -428,7 +429,6 @@
 
     </div>
     
-    <!-- Attendance Section -->
     <div id="attendance" class="attendance">
       <h1>Mark your Attendance</h1>
     <div>
@@ -487,6 +487,46 @@
 
   <!-- Scripts (for charts and progress bars) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const lineChartData = {
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  datasets: [
+    {
+      label: 'Project A',
+      data: [10, 20, 30, 40, 20, 30, 10],
+      borderColor: 'yellow',
+      fill: false,
+    },
+    {
+      label: 'Project B',
+      data: [20, 30, 10, 40, 30, 20, 30],
+      borderColor: 'orange',
+      fill: false,
+    },
+    {
+      label: 'Project C',
+      data: [30, 20, 40, 30, 40, 20, 10],
+      borderColor: 'red',
+      fill: false,
+    }
+  ]
+};
+
+// Create the line chart
+const lineCtx = document.getElementById('lineChart').getContext('2d');
+new Chart(lineCtx, {
+  type: 'line',
+  data: lineChartData,
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+  </script>
   <script>
     // For Job Applications Chart (example using Chart.js)
     var ctx = document.getElementById('jobChart').getContext('2d');

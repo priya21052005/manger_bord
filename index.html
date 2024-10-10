@@ -286,15 +286,13 @@
             container.classList.remove('active');
         });
 
-        // JavaScript to handle the login functionality
         const loginForm = document.getElementById('loginForm');
         loginForm.addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault(); 
 
             const userId = document.getElementById('userId').value;
             const password = document.getElementById('password').value;
 
-            // Perform login validation
             if (userId === 'manager@gmail.com' && password === 'manager') {
                 window.location.href = 'efg.html';
             } else if (userId === 'user@gmail.com' && password === 'user') {
